@@ -6,4 +6,7 @@ server:port
 api:attempts
 app:showsPerPage
 api:url
+db:host
+db:port
+db:name
 ```
