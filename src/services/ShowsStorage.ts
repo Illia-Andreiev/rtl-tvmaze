@@ -6,14 +6,15 @@ import {ShowModel} from '../interfaces/ShowModel';
 import * as mongoosePaginate from 'mongoose-paginate';
 import {PaginatedShowModel} from '../interfaces/PaginatedShowModel';
 
-class ShowStorage {
+class ShowsStorage {
 
-  private static instance: ShowStorage;
+  private static instance: ShowsStorage;
 
-  private constructor(private model: PaginatedShowModel) {}
+  private constructor(private model: PaginatedShowModel) {
+  }
 
   static getInstance() {
-    if (!ShowStorage.instance) {
+    if (!ShowsStorage.instance) {
 
       const tvmShowSchema = new Schema({
         id: Number,
@@ -29,16 +30,12 @@ class ShowStorage {
 
       const tvmShowModel = mongoose.model<ShowModel>('tvmShowModel', tvmShowSchema);
 
-      ShowStorage.instance = new ShowStorage(tvmShowModel);
+      ShowsStorage.instance = new ShowsStorage(tvmShowModel);
     }
-    return ShowStorage.instance;
+    return ShowsStorage.instance;
   }
 
-  public saveCast(data: FetchedShow[]): void {
-    /*fs.writeFile(STORAGE_FILE, JSON.stringify(data), 'utf8', (err => {
-      if (err) throw err;
-    }));*/
-
+  public saveShows(data: FetchedShow[]): void {
     this.model.collection.insertMany(data, function (err) {
       if (err) {
         throw err;
@@ -47,29 +44,21 @@ class ShowStorage {
   }
 
   public getPage(page: number): Promise<string> {
-    /*return this.getShows().then((cast) => {
-      return JSON.stringify(JSON.parse(cast).slice(page * SHOW_PER_PAGE - SHOW_PER_PAGE, page * SHOW_PER_PAGE));
-    });*/
-
-    return this.model.paginate({}, {page: page, limit: SHOW_PER_PAGE})
+    return this.model.paginate({}, {select: '-_id',page: page, limit: SHOW_PER_PAGE})
       .then((shows) => {
         return JSON.stringify(shows.docs);
       });
   }
 
   public getShows(): Promise<string> {
-    /*return new Promise((resolve, reject) => {
-      fs.readFile(STORAGE_FILE, 'utf8', function (err, data) {
-        if (err) reject(err);
-        resolve(data);
-      });
-    });*/
-
     return this.model.find({}, '-_id').then((shows) => {
       return JSON.stringify(shows);
     });
+  }
 
+  public checkShows(): Promise<Boolean> {
+    return this.model.find({}).then((res) => !!res.length);
   }
 }
 
-export default ShowStorage.getInstance();
+export default ShowsStorage.getInstance();

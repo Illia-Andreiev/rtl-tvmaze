@@ -1,6 +1,6 @@
 import * as express from 'express';
 const router = express.Router();
-import {default as showStorage, ShowStorage} from '../services/ShowStorage';
+import showStorage from '../services/ShowsStorage';
 import {Request, Response} from 'express';
 
 
@@ -18,8 +18,6 @@ router.get('/:page', async function(req: Request, res: Response) {
   } else {
     res.status(404).json({error: 'Page number should be a number!'});
   }
-
-  // TODO: Error handling for out of range page parameter
 });
 
 export default router;

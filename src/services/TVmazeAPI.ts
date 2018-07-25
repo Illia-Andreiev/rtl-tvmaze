@@ -38,8 +38,8 @@ export class TVmazeAPI {
   }
 
   public async fetchShows(): Promise<FetchedShow[]> {
-    const data = await this.loadData<ShowResponse[]>(`${this.apiURL}/shows`);
-    const showsPromises = data.map((show) => {
+    const showsDto = await this.loadData<ShowResponse[]>(`${this.apiURL}/shows`);
+    const mappedShowPromises = showsDto.map((show) => {
       return this.loadData<CastResponse[]>(`${this.apiURL}/shows/${show.id}/cast`)
         .then((castDto) => {
           let cast = castDto.map((item) => ({
@@ -57,6 +57,6 @@ export class TVmazeAPI {
           }
         });
     });
-    return await Promise.all(showsPromises);
+    return await Promise.all(mappedShowPromises);
   }
 }

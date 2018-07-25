@@ -1,5 +1,5 @@
 import {TVmazeAPI} from './services/TVmazeAPI';
-import showStorage from './services/ShowStorage';
+import showStorage from './services/ShowsStorage';
 import {API_URL, SERVER_PORT} from './Constant';
 import * as express from 'express';
 import indexRouter from './routes/index';
@@ -14,29 +14,20 @@ app.listen(SERVER_PORT, () => {
 
 mongoose.connect('mongodb://127.0.0.1:27017/tvm', {useNewUrlParser: true});
 const {connection} = mongoose;
-connection.on('error', console.error.bind(console, 'connection error:'));
-connection.once('open', function() {
+connection.on('error', (err) => {
+  throw err;
+});
+connection.once('open', () => {
   console.log('Connected to db!');
 });
 
 updateDb();
 
 async function updateDb() {
-  const tvmazeApi = new TVmazeAPI(API_URL);
-  const fetchedCast = await tvmazeApi.fetchShows();
-  showStorage.saveCast(fetchedCast);
+  const isDbFilled = await showStorage.checkShows();
+  if (!isDbFilled) {
+    const tvmazeApi = new TVmazeAPI(API_URL);
+    const fetchedShows = await tvmazeApi.fetchShows();
+    showStorage.saveShows(fetchedShows);
+  }
 }
-
-
-/*
-tvmShowModel.create({
-  id: 1,
-  name: 'Name',
-  cast: [{
-    id: 1,
-    name: 'Actor',
-    birthday: '18.07/1994'
-  }]
-}, (err) => {
-  if (err) throw new Error('Something wrong with saving document');
-});*/
