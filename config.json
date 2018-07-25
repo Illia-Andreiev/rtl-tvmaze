@@ -1,0 +1,12 @@
+{
+  "app": {
+    "showsPerPage": 5
+  },
+  "server": {
+    "port": 2000
+  },
+  "api": {
+    "attempts": 100,
+    "url": "http://api.tvmaze.com"
+  }
+}

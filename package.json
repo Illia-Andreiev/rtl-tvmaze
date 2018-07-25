@@ -10,7 +10,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "dist/storage/*"
+      ""
     ]
   },
   "author": "Illia <Illia_Andreiev@epam.com>",
@@ -21,6 +21,7 @@
     "@types/mongoose-paginate": "^5.0.6",
     "@types/node": "^10.5.2",
     "@types/node-fetch": "^2.1.2",
+    "@types/nconf": "0.0.37",
     "concurrently": "^3.6.0",
     "nodemon": "^1.18.3",
     "typescript": "^2.9.2"
@@ -29,6 +30,7 @@
     "express": "^4.16.3",
     "mongoose": "^5.2.4",
     "mongoose-paginate": "^5.0.3",
+    "nconf": "^0.10.0",
     "node-fetch": "^2.2.0"
   }
 }

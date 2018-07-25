@@ -1,8 +1,8 @@
 import {TVmazeAPI} from './services/TVmazeAPI';
 import showStorage from './services/ShowsStorage';
-import {API_URL, SERVER_PORT} from './Constant';
+import {API_URL, SERVER_PORT} from './services/Config';
 import * as express from 'express';
-import indexRouter from './routes/index';
+import indexRouter from './routes/Index';
 import * as mongoose from "mongoose";
 
 const app = express();
@@ -26,6 +26,7 @@ updateDb();
 async function updateDb() {
   const isDbFilled = await showStorage.checkShows();
   if (!isDbFilled) {
+    console.log('DB is empty! Filling the db ...');
     const tvmazeApi = new TVmazeAPI(API_URL);
     const fetchedShows = await tvmazeApi.fetchShows();
     showStorage.saveShows(fetchedShows);

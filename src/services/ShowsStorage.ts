@@ -1,4 +1,4 @@
-import {SHOW_PER_PAGE} from '../Constant';
+import {SHOW_PER_PAGE} from './Config';
 import * as mongoose from 'mongoose';
 import {Schema} from 'mongoose';
 import {FetchedShow} from '../interfaces/FetchedShow';

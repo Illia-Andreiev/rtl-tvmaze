@@ -1,5 +1,5 @@
 import {ApiRequest, ApiResponseError} from './ApiRequest';
-import {ATTEMPTS_NUMBER} from '../Constant';
+import {ATTEMPTS_NUMBER} from './Config';
 import {FetchedShow} from '../interfaces/FetchedShow';
 import {ShowResponse} from '../interfaces/ShowResponse';
 import {CastResponse} from '../interfaces/CastResponse';
