@@ -1,6 +1,6 @@
 import {TVmazeAPI} from './services/TVmazeAPI';
 import showStorage from './services/ShowsStorage';
-import {API_URL, SERVER_PORT} from './services/Config';
+import {API_URL, DB_NAME, DB_HOST, SERVER_PORT, DB_PORT} from './services/Config';
 import * as express from 'express';
 import indexRouter from './routes/Index';
 import * as mongoose from "mongoose";
@@ -12,7 +12,7 @@ app.listen(SERVER_PORT, () => {
   console.log(`Server listening on port: ${SERVER_PORT}`);
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/tvm', {useNewUrlParser: true});
+mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, {useNewUrlParser: true});
 const {connection} = mongoose;
 connection.on('error', (err) => {
   throw err;
