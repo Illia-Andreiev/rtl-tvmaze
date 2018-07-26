@@ -1,4 +1,5 @@
 import fetch, {Response} from 'node-fetch';
+import {logger} from './Logger';
 
 export class ApiResponseError extends Error {
   constructor(public statusCode: number) {
@@ -16,8 +17,6 @@ export class ApiRequest {
         }
 
         return res.json();
-      },(err) => {
-        return Promise.reject(err);
       });
   }
 }

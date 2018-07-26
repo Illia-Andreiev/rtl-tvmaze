@@ -3,27 +3,27 @@ import {ATTEMPTS_NUMBER} from './Config';
 import {FetchedShow} from '../interfaces/FetchedShow';
 import {ShowResponse} from '../interfaces/ShowResponse';
 import {CastResponse} from '../interfaces/CastResponse';
+import {logger} from './Logger';
 
 export class TVmazeAPI {
   constructor(private apiURL: string) {
   }
 
   private loadData<T>(path: string): Promise<T> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject): void => {
       function retry(attempt: number): void {
         ApiRequest.get(path)
           .then(resolve)
           .catch((error: ApiResponseError) => {
               if (error.statusCode === 429 && attempt !== 0) {
-                retry(attempt--);
+                retry(--attempt);
               } else {
                 reject(error);
               }
             }
           );
       }
-
-      retry(ATTEMPTS_NUMBER);
+      retry(10);
     });
   }
 
@@ -53,8 +53,8 @@ export class TVmazeAPI {
           return {
             id: show.id,
             name: show.name,
-            cast,
-          }
+            cast
+          };
         });
     });
     return await Promise.all(mappedShowPromises);

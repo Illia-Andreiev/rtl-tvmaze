@@ -6,6 +6,7 @@ import {ShowModel} from '../interfaces/ShowModel';
 import * as mongoosePaginate from 'mongoose-paginate';
 import {PaginatedShowModel} from '../interfaces/PaginatedShowModel';
 import {MongoError} from 'mongodb';
+import {logger} from './Logger';
 
 class ShowsStorage {
 
@@ -37,23 +38,25 @@ class ShowsStorage {
   }
 
   public saveShows(data: FetchedShow[]): void {
-    this.model.collection.insertMany(data, (err: MongoError) => {
-      if (err) {
-        throw err;
-      }
+    this.model.collection.insertMany(data).catch((error: MongoError) => {
+      logger.error(error);
     });
   }
 
-  public getPage(page: number): Promise<string> {
+  public getPage(page: number): Promise<string | void> {
     return this.model.paginate({}, {select: '-_id', page: page, limit: SHOW_PER_PAGE})
       .then((shows: PaginateResult<ShowModel>) => {
         return JSON.stringify(shows.docs);
+      }).catch((error: Error) => {
+        logger.error(error);
       });
   }
 
-  public getShows(): Promise<string> {
+  public getShows(): Promise<string | void> {
     return this.model.find({}, '-_id').then((shows: ShowModel[]) => {
       return JSON.stringify(shows);
+    }).catch((error: Error) => {
+      logger.error(error);
     });
   }
 
