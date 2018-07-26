@@ -16,7 +16,7 @@ router.get('/:page', async function(req: Request, res: Response) {
     const pagedCast = await showStorage.getPage(+pageParam);
     res.type('json').send(pagedCast);
   } else {
-    res.status(404).json({error: 'Page number should be a number!'});
+    res.status(400).json({error: 'Bad Request: Page number should be a number!'});
   }
 });
 
