@@ -19,9 +19,8 @@ connection.on('error', (err) => {
 });
 connection.once('open', () => {
   console.log('Connected to db!');
+  updateDb();
 });
-
-updateDb();
 
 async function updateDb() {
   const isDbFilled = await showStorage.checkShows();
