@@ -23,7 +23,7 @@ export class TVmazeAPI {
             }
           );
       }
-      retry(10);
+      retry(ATTEMPTS_NUMBER);
     });
   }
 
