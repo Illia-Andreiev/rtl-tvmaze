@@ -1,10 +1,11 @@
 import {SHOW_PER_PAGE} from './Config';
 import * as mongoose from 'mongoose';
-import {Schema} from 'mongoose';
+import {PaginateResult, Schema} from 'mongoose';
 import {FetchedShow} from '../interfaces/FetchedShow';
 import {ShowModel} from '../interfaces/ShowModel';
 import * as mongoosePaginate from 'mongoose-paginate';
 import {PaginatedShowModel} from '../interfaces/PaginatedShowModel';
+import {MongoError} from 'mongodb';
 
 class ShowsStorage {
 
@@ -13,7 +14,7 @@ class ShowsStorage {
   private constructor(private model: PaginatedShowModel) {
   }
 
-  static getInstance() {
+  static getInstance(): ShowsStorage {
     if (!ShowsStorage.instance) {
 
       const tvmShowSchema = new Schema({
@@ -36,7 +37,7 @@ class ShowsStorage {
   }
 
   public saveShows(data: FetchedShow[]): void {
-    this.model.collection.insertMany(data, function (err) {
+    this.model.collection.insertMany(data, (err: MongoError) => {
       if (err) {
         throw err;
       }
@@ -44,20 +45,20 @@ class ShowsStorage {
   }
 
   public getPage(page: number): Promise<string> {
-    return this.model.paginate({}, {select: '-_id',page: page, limit: SHOW_PER_PAGE})
-      .then((shows) => {
+    return this.model.paginate({}, {select: '-_id', page: page, limit: SHOW_PER_PAGE})
+      .then((shows: PaginateResult<ShowModel>) => {
         return JSON.stringify(shows.docs);
       });
   }
 
   public getShows(): Promise<string> {
-    return this.model.find({}, '-_id').then((shows) => {
+    return this.model.find({}, '-_id').then((shows: ShowModel[]) => {
       return JSON.stringify(shows);
     });
   }
 
   public checkShows(): Promise<Boolean> {
-    return this.model.find({}).then((res) => !!res.length);
+    return this.model.find({}).then((shows: ShowModel[]) => !!shows.length);
   }
 }
 
